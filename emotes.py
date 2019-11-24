@@ -23,8 +23,12 @@ class Emote:
             return api_res['emote']['name']
 
         elif self.emote_type == 'bttv':
-            api_url = f'https://api.betterttv.net/2/channels/{self.emote_channel}'
+            if self.emote_channel == 'global':
+                api_url = 'https://api.betterttv.net/2/emotes'
+            else:
+                api_url = f'https://api.betterttv.net/2/channels/{self.emote_channel}'
             api_res = requests.get(api_url).json()
+            print(api_res)
             for emote in api_res['emotes']:
                 if emote['id'] == self.emote_id:
                     return emote['code']
