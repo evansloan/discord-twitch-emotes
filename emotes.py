@@ -18,7 +18,7 @@ class Emote:
             return api_res[0]['code']
 
         elif self.emote_type == 'ffz':
-            api_url = f'https://api.frankerfacez.com/v1/emote/{self.emote_id}'
+            api_url = f'https://api.frankerfacez.com/v1/emote/{self.emote_id}/4'
             api_res = requests.get(api_url).json()
             return api_res['emote']['name']
 
