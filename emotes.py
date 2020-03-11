@@ -18,7 +18,7 @@ class Emote:
             return api_res[0]['code']
 
         elif self.emote_type == 'ffz':
-            api_url = f'https://api.frankerfacez.com/v1/emote/{self.emote_id}/4'
+            api_url = f'https://api.frankerfacez.com/v1/emote/{self.emote_id}'
             api_res = requests.get(api_url).json()
             return api_res['emote']['name']
 
@@ -42,7 +42,7 @@ class Emote:
             img = requests.get(f'https://cdn.betterttv.net/emote/{self.emote_id}/2x').content
             return io.BytesIO(img)
         elif self.emote_type == 'ffz':
-            img = requests.get(f'https://cdn.frankerfacez.com/emoticon/{self.emote_id}/1').content
+            img = requests.get(f'https://cdn.frankerfacez.com/emoticon/{self.emote_id}/4').content
             return io.BytesIO(img)
 
 
