@@ -28,7 +28,6 @@ class Emote:
             else:
                 api_url = f'https://api.betterttv.net/2/channels/{self.emote_channel}'
             api_res = requests.get(api_url).json()
-            print(api_res)
             for emote in api_res['emotes']:
                 if emote['id'] == self.emote_id:
                     return emote['code']
@@ -36,10 +35,10 @@ class Emote:
     @property
     def image(self):
         if self.emote_type == 'twitch':
-            img = requests.get(f'https://static-cdn.jtvnw.net/emoticons/v1/{self.emote_id}/2.0').content
+            img = requests.get(f'https://static-cdn.jtvnw.net/emoticons/v1/{self.emote_id}/3.0').content
             return io.BytesIO(img)
         elif self.emote_type == 'bttv':
-            img = requests.get(f'https://cdn.betterttv.net/emote/{self.emote_id}/2x').content
+            img = requests.get(f'https://cdn.betterttv.net/emote/{self.emote_id}/4x').content
             return io.BytesIO(img)
         elif self.emote_type == 'ffz':
             img = requests.get(f'https://cdn.frankerfacez.com/emoticon/{self.emote_id}/4').content
