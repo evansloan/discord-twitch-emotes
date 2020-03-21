@@ -38,7 +38,7 @@ class Emote:
             img = requests.get(f'https://static-cdn.jtvnw.net/emoticons/v1/{self.emote_id}/3.0').content
             return io.BytesIO(img)
         elif self.emote_type == 'bttv':
-            img = requests.get(f'https://cdn.betterttv.net/emote/{self.emote_id}/4x').content
+            img = requests.get(f'https://cdn.betterttv.net/emote/{self.emote_id}/3x').content
             return io.BytesIO(img)
         elif self.emote_type == 'ffz':
             img = requests.get(f'https://cdn.frankerfacez.com/emoticon/{self.emote_id}/4').content
