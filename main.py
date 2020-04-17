@@ -52,7 +52,7 @@ async def add_emote(ctx, *, content: str):
 
     await server.create_custom_emoji(name=emote.name, image=emote.image.read())
     discord_emote = get(server.emojis, name=emote.name)
-    await ctx.send(f'<:{discord_emote.name}:{discord_emote.id}> added!')
+    await ctx.send(f'<:{discord_emote.name}:{discord_emote.id}>')
 
 
 async def send_error(ctx, error):
