@@ -54,11 +54,11 @@ class Emote:
             raise InvalidCommandException()
 
         emote_type = cmd_match[1].lower()
-        emote_id = cmd_match[2]
+        emote_id = cmd_match[2].strip().lower()
 
         emote_channel = None
         if emote_type == 'bttv':
-            emote_channel = cmd_match[3]
+            emote_channel = cmd_match[3].lower()
             if not emote_channel:
                 raise InvalidCommandException()
 
