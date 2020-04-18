@@ -4,7 +4,8 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 
-import emotes
+from emotes import Emote
+from exceptions import EmoteNotFoundException, InvalidCommandException
 
 token = os.getenv('TOKEN')
 
@@ -38,15 +39,15 @@ async def help(ctx):
 
 
 @bot.command()
-async def add_emote(ctx, *, content: str):
+async def add_emote(ctx, *, content):
     server = ctx.message.guild
-    emote = emotes.get_emote(ctx, content)
 
-    if not emote:
+    try:
+        emote = Emote.get_emote(content)
+    except InvalidCommandException:
         await send_error(ctx, 'Invalid command')
         return
-
-    if not emote.name or not emote.image:
+    except EmoteNotFoundException:
         await send_error(ctx, 'Emote not found')
         return
 
