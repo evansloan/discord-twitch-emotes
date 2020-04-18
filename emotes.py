@@ -58,12 +58,12 @@ class Emote:
 
         emote_channel = None
         if emote_type == 'bttv':
-            emote_channel = cmd_match[3].lower()
+            emote_channel = cmd_match[3]
             if not emote_channel:
                 raise InvalidCommandException()
 
         try:
-            emote = Emote(emote_type, emote_id, emote_channel)
+            emote = Emote(emote_type, emote_id, emote_channel.lower())
             return emote
         except (KeyError, IndexError):
             raise EmoteNotFoundException()

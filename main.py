@@ -15,7 +15,7 @@ bot.remove_command('help')
 
 @bot.command()
 async def help(ctx):
-    help_message = (
+    add_emote_msg = (
         'Adds a twitch emote to the server\n\n'
         '**Usage:**\n'
         '`+add_emote twitch <emote_id>`\n'
@@ -33,8 +33,14 @@ async def help(ctx):
         'betterttv.com/emotes/__**5771aa498bbc1e572cb7ae4d**__\n'
         'frankerfacez.com/emoticon/__**261802**__-4Town'
     )
+    emote_msg = (
+        'Send an animated emote\n\n'
+        '**Usage:**\n'
+        '`+emote <emote_name>`'
+    )
     embed = discord.Embed(colour=discord.Colour.green())
-    embed.add_field(name='+add_emote', value=help_message)
+    embed.add_field(name='+add_emote', value=add_emote_msg)
+    embed.add_field(name='+emote', value=emote_msg)
     await ctx.send(embed=embed)
 
 
@@ -53,7 +59,22 @@ async def add_emote(ctx, *, content):
 
     await server.create_custom_emoji(name=emote.name, image=emote.image.read())
     discord_emote = get(server.emojis, name=emote.name)
-    await ctx.send(f'<:{discord_emote.name}:{discord_emote.id}>')
+    emote_string = f'<:{discord_emote.name}:{discord_emote.id}>'
+    if discord_emote.animated:
+        emote_string = f'<a:{discord_emote.name}:{discord_emote.id}>'
+    await ctx.send(emote_string)
+
+
+@bot.command()
+async def emote(ctx, *, content):
+    server = ctx.message.guild
+    try:
+        emote = get(server.emojis, name=content)
+        if emote.animated:
+            await ctx.send(f'<a:{emote.name}:{emote.id}>')
+            await ctx.message.delete()
+    except AttributeError:
+        await send_error(ctx, 'Emote not found')
 
 
 async def send_error(ctx, error):
