@@ -61,9 +61,10 @@ class Emote:
             emote_channel = cmd_match[3]
             if not emote_channel:
                 raise InvalidCommandException()
+            emote_channel = emote_channel.lower()
 
         try:
-            emote = Emote(emote_type, emote_id, emote_channel.lower())
+            emote = Emote(emote_type, emote_id, emote_channel)
             return emote
         except (KeyError, IndexError):
             raise EmoteNotFoundException()

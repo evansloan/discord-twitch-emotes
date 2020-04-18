@@ -36,7 +36,9 @@ async def help(ctx):
     emote_msg = (
         'Send an animated emote\n\n'
         '**Usage:**\n'
-        '`+emote <emote_name>`'
+        '`+emote <emote_name>`\n\n'
+        'Supply emote names as a comma-separated list to send multiple emotes in '
+        'a single message'
     )
     embed = discord.Embed(colour=discord.Colour.green())
     embed.add_field(name='+add_emote', value=add_emote_msg)
@@ -68,13 +70,21 @@ async def add_emote(ctx, *, content):
 @bot.command()
 async def emote(ctx, *, content):
     server = ctx.message.guild
-    try:
-        emote = get(server.emojis, name=content)
+    names = content.split(',')
+
+    emote_string = ''
+    for name in names:
+        emote = get(server.emojis, name=name)
+        if emote is None:
+            await send_error(ctx, f'Emote {name} not found')
+            return
         if emote.animated:
-            await ctx.send(f'<a:{emote.name}:{emote.id}>')
-            await ctx.message.delete()
-    except AttributeError:
-        await send_error(ctx, 'Emote not found')
+            emote_string += f'<a:{emote.name}:{emote.id}>'
+        else:
+            emote_string += f'<:{emote.name}:{emote.id}>'
+
+    await ctx.send(emote_string)
+    await ctx.message.delete()
 
 
 async def send_error(ctx, error):
