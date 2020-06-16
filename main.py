@@ -13,6 +13,11 @@ bot = commands.Bot(command_prefix='+')
 bot.remove_command('help')
 
 
+@bot.event
+async def on_ready():
+    await bot.change_presence(activity=discord.Game('+help'))
+
+
 @bot.command()
 async def help(ctx):
     add_emote_msg = (
