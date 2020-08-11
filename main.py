@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 
+import models
 from emotes import Emote
 from exceptions import EmoteNotFoundException, InvalidCommandException
 
@@ -18,7 +19,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game('+help'))
 
 
-@bot.command()
+@bot.command(aliases=['h'])
 async def help(ctx):
     add_emote_msg = (
         'Adds a twitch emote to the server\n\n'
@@ -51,7 +52,7 @@ async def help(ctx):
     await ctx.send(embed=embed)
 
 
-@bot.command()
+@bot.command(aliases=['a'])
 async def add_emote(ctx, *, content):
     server = ctx.message.guild
 
@@ -72,7 +73,7 @@ async def add_emote(ctx, *, content):
     await ctx.send(emote_string)
 
 
-@bot.command()
+@bot.command(aliases=['e'])
 async def emote(ctx, *, content):
     server = ctx.message.guild
     names = content.split(',')
@@ -92,6 +93,38 @@ async def emote(ctx, *, content):
     await ctx.message.delete()
 
 
+@bot.command(aliases=['ac', 'ace'])
+async def add_custom_emote(ctx, name, content):
+    server = ctx.message.guild
+    lines = content.split('/')
+    emote_sets = []
+    for line in lines:
+        emote_sets.append(line.split(','))
+
+    emote_string = ''
+    for emote_set in emote_sets:
+        for e in emote_set:
+            emote = get(server.emojis, name=e.strip())
+            if emote is None:
+                await send_error(ctx, f'Emote {e} not found')
+                return
+            if emote.animated:
+                emote_string += f'<a:{emote.name}:{emote.id}>'
+            else:
+                emote_string += f'<:{emote.name}:{emote.id}>'
+        emote_string += '\n'
+
+    ce = await models.CustomEmote.insert(name=name, emote_string=emote_string, server_id=server.id)
+    
+    await ctx.send(emote_string)
+     
+
+@bot.command(aliases=['c', 'ce'])
+async def custom_emote(ctx, *, content):
+    ce = await models.CustomEmote.select(name=content, server_id=ctx.message.guild.id)
+    await ctx.send(ce.emote_string)
+
+
 async def send_error(ctx, error):
     help_message = 'Type `+help` for further assistance'
     embed = discord.Embed(colour=discord.Colour.red())
@@ -99,4 +132,5 @@ async def send_error(ctx, error):
     await ctx.send(embed=embed)
 
 
+bot.loop.run_until_complete(models.create_db())
 bot.run(token)
