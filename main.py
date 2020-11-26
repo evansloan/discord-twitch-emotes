@@ -123,6 +123,7 @@ async def add_custom_emote(ctx, name, content):
 async def custom_emote(ctx, *, content):
     ce = await models.CustomEmote.select(name=content, server_id=ctx.message.guild.id)
     await ctx.send(ce.emote_string)
+    await ctx.message.delete()
 
 
 async def send_error(ctx, error):
